@@ -1,0 +1,76 @@
+group 'com.juho'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'base'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+
+apply plugin: 'war'
+apply plugin: 'tomcat'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "http://repo.springsource.org/plugins-release"}
+    }
+    dependencies {
+        classpath "org.gradle.api.plugins:gradle-tomcat-plugin:0.9.9"
+        classpath (group: 'org.gradle.api.plugins', name: 'gradle-cargo-plugin', version: '0.6.1')
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.1'
+    }
+}
+
+dependencies {
+    def slf4jversion = "1.7.2"
+    compile "org.slf4j:slf4j-api:$slf4jversion"
+    compile "ch.qos.logback:logback-classic:1.0.13"
+
+    def springversion = "4.3.4.RELEASE"
+    compile "org.springframework:spring-webmvc:$springversion"
+
+    def tomcatversion = "7.0.47"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:$tomcatversion"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-logging-juli:$tomcatversion"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:$tomcatversion") {
+        exclude group: "org.eclipse.jdt.core.compiler", module: "ecj"
+    }
+
+    compile 'org.springframework.data:spring-data-jpa:1.8.1.RELEASE'
+    compile("com.h2database:h2:1.4.187")
+    compile("org.hibernate:hibernate-entitymanager:4.3.10.Final")
+
+    compile("io.springfox:springfox-swagger2:2.6.1")
+    compile("io.springfox:springfox-swagger-ui:2.6.1")
+
+    compile("com.fasterxml.jackson.core:jackson-databind:2.7.5")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.5")
+
+    providedCompile "javax.servlet:javax.servlet-api:3.1.0"
+    providedCompile 'javax.websocket:javax.websocket-api:1.0'
+    providedCompile 'javax.servlet:jsp-api:2.0'
+    providedCompile "org.apache.tomcat:tomcat-servlet-api:$tomcatversion"
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+tomcatRun {
+    httpPort = 8083
+    httpsPort = 8444
+    stopPort = 8084
+    dependsOn war
+    contextPath = "/"
+}
+
+tomcatRunWar {
+    dependsOn war
+    contextPath = "/"
+}
