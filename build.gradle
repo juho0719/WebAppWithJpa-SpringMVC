@@ -35,6 +35,7 @@ dependencies {
 
     def springversion = "4.3.4.RELEASE"
     compile "org.springframework:spring-webmvc:$springversion"
+    compile "org.springframework:spring-test:$springversion"
 
     def tomcatversion = "7.0.47"
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:$tomcatversion"
@@ -60,6 +61,8 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile("org.mockito:mockito-core:2.18.3")
+
 }
 
 tomcatRun {
